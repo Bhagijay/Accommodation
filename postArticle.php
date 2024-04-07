@@ -65,10 +65,33 @@ if (!isset($_SESSION['userEmail']) || $_SESSION['userType'] != "WebAdmin") {
             </form>
         </div>
     </div>
-    <<footer class="footer" id="footer_section">
+   
+    <script>
+        document.getElementById("article_form").onsubmit = function() {
+            return validateForm();
+        };
+        var validateForm = () => {
+            let valid = true;
+            const titleInput = document.getElementById("title");
+            if (titleInput.value.trim() === "") {
+                valid = false;
+                alert("Title is required");
+            } else if (titleInput.value.trim().length > 26) {
+                valid = false;
+                alert("Title must contain at most 26 characters");
+            }
+            const contentInput = document.getElementById("content");
+            if (contentInput.value.trim() === "") {
+                valid = false;
+                alert("Content is required");
+            }
+            return valid;
+        }
+    </script>
+<footer class="footer" id="footer_section">
         <div class="section__container footer__container">
             <div class="footer__col">
-                <h3>Accommo NSBM</h3>
+                <h3>Accommo-NSBM</h3>
                 <p>
                 Experience unparalleled convenience with Accommo NSBM, the ultimate solution for hassle-free student housing near NSBM Green University Town. Explore a plethora of accommodation choices, simplifying the process of finding your dream living space. </p>
                 <p>
@@ -97,32 +120,15 @@ if (!isset($_SESSION['userEmail']) || $_SESSION['userType'] != "WebAdmin") {
                 </ul>
             </div>
         </div>
+
         <div class="footer__bar">
-             All rights reserved.
+        2024 Accommo NSBM. All rights reserved.
         </div>
+
     </footer>
-    <script>
-        document.getElementById("article_form").onsubmit = function() {
-            return validateForm();
-        };
-        var validateForm = () => {
-            let valid = true;
-            const titleInput = document.getElementById("title");
-            if (titleInput.value.trim() === "") {
-                valid = false;
-                alert("Title is required");
-            } else if (titleInput.value.trim().length > 26) {
-                valid = false;
-                alert("Title must contain at most 26 characters");
-            }
-            const contentInput = document.getElementById("content");
-            if (contentInput.value.trim() === "") {
-                valid = false;
-                alert("Content is required");
-            }
-            return valid;
-        }
-    </script>
+
     <?php } ?>
+    
+    
 </body>
 </html>

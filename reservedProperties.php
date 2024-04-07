@@ -17,16 +17,25 @@ $headerText = "Reserved Properties";
 function fetchAllAccommodations($connection)
 {
     $userId = $_SESSION['userId'];
-    $sql = "SELECT reservations.*, properties.title, properties.description, properties.bedCounts, properties.postedAt, properties.rent, properties.longitude, properties.latitude, properties.locationLink, properties.status AS propertyStatus, images.imageData 
-            FROM reservations
-            INNER JOIN properties ON reservations.propertyId = properties.propertyId
-            LEFT JOIN (
-                SELECT propertyId, MIN(imageId) AS minImageId
-                FROM images
-                GROUP BY propertyId
-            ) AS min_images ON properties.propertyId = min_images.propertyId
-            LEFT JOIN images ON min_images.minImageId = images.imageId
-            WHERE reservations.userId = $userId";
+    $sql = "SELECT reservations.*, 
+    properties.title, 
+    properties.description, 
+    properties.bedCounts, 
+    properties.rent, 
+    properties.longitude, 
+    properties.latitude, 
+    properties.Address AS locationLink, 
+    properties.status AS propertyStatus, 
+    images.image_data AS imageData 
+FROM reservations 
+INNER JOIN properties ON reservations.propertyId = properties.id 
+LEFT JOIN (
+ SELECT property_id, MAX(id) AS maxImageId 
+ FROM images 
+ GROUP BY property_id
+) AS latest_images ON properties.id = latest_images.property_id 
+LEFT JOIN images ON latest_images.maxImageId = images.id 
+WHERE reservations.userId = $userId";
             
             
 
@@ -46,7 +55,7 @@ function fetchAllAccommodations($connection)
 
             echo '<div class="card__details">';
             echo '<p class="beds"><strong>Beds Available</strong>' . $row["bedCounts"] . '</p>';
-            echo '<p class="beds"><strong>Posted at</strong> ' . date("Y-m-d", strtotime($row["postedAt"])) . '</p>';
+            echo '<p class="beds"><strong>Address</strong>' . $row["locationLink"] . '</p>';
             echo '</div>';
 
             echo '<div class="card_footer">';
@@ -69,7 +78,8 @@ function fetchAllAccommodations($connection)
             echo '</div>';
             echo '</div>';
             echo '<div class="card__image">';
-            echo '<img src="data:image/jpeg;base64,' . base64_encode($row["imageData"]) . '" alt="' . $row["title"] . '">';
+            echo '<img src="' . $row["imageData"] . '" alt="' . $row["title"] . '" style="height: 100%; object-fit: cover;">';
+            echo '<br><br>';
             echo '</div>';
             echo '</div>';
             
@@ -123,46 +133,9 @@ function fetchAllAccommodations($connection)
 
         </div>
     </section>
-    <footer class="footer" id="footer_section">
-        <div class="section__container footer__container">
-            <div class="footer__col">
-                <h3>Accommo NSBM</h3>
-                <p>
-                Experience unparalleled convenience with Accommo NSBM, the ultimate solution for hassle-free student housing near NSBM Green University Town. Explore a plethora of accommodation choices, simplifying the process of finding your dream living space.
-
-                </p>
-                <p>
-                Say goodbye to accommodation worries and welcome a seamless booking experience with Accommo NSBM.
-                </p>
-            </div>
-            <div class="footer__col">
-                <h4>Company</h4>
-                <p>About Us</p>
-                <p>Our Team</p>
-                <p>Contact Us</p>
-            </div>
-            <div class="footer__col">
-                <h4>Legal</h4>
-                <p>FAQs</p>
-                <p>Terms & Conditions</p>
-                <p>Privacy Policy</p>
-            </div>
-            <div class="footer__col">
-                <h4>Resources</h4>
-                <ul class="social-icons">
-                    <li><a href="#" class="fab fa-facebook-f"></a></li>
-                    <li><a href="#" class="fab fa-twitter"></a></li>
-                    <li><a href="#" class="fab fa-instagram"></a></li>
-                    <li><a href="#" class="fab fa-linkedin-in"></a></li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="footer__bar">
-            Copyright © nsbm. All rights reserved.
-        </div>
-
-    </footer>
+    <?php
+    include "footer.php";
+    ?>
 
 </body>
 

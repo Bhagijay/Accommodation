@@ -143,7 +143,7 @@ if (!isset($_SESSION['userEmail']) || $_SESSION['userType'] != "WebAdmin") {
     </section>
 
     <?php
-    include "C:/xampp/htdocs/NSBM-Accommodation-Finder/footer.php";
+    include "footer.php";
     ?>
 
 </body>
